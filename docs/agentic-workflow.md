@@ -28,6 +28,7 @@ A basic AI pipeline that takes a ticket from idea to a draft PR. You decide **wh
 | ------------------------------------ | ---------------------------------------------------------- | ------ |
 | `.ai/skills/start-ticket/SKILL.md`   | The `/start-ticket` command                                | ✅     |
 | `.ai/skills/start-ticket/flow.md`    | The rulebook the AI follows (steps, roles, file templates) | ✅     |
+| `.ai/skills/commit-msg/SKILL.md`     | The `/commit-msg` command for commits outside the pipeline | ✅     |
 | `.claude/agents/implementer.md`      | Implementer subagent                                       | ✅     |
 | `.claude/agents/reviewer.md`         | Reviewer subagent                                          | ✅     |
 | `.ai/scripts/gate.sh`                | Runs all quality checks with a compact summary             | ✅     |
@@ -40,6 +41,7 @@ A basic AI pipeline that takes a ticket from idea to a draft PR. You decide **wh
 ```bash
 composer install            # also runs boost:update
 php artisan boost:update    # generates AGENTS.md, skills, MCP config from boost.json
+vendor/bin/sail up -d       # start Sail; tests need its MySQL database
 ```
 
 Then restart Claude Code so it loads the `/start-ticket` command and the agents.
@@ -89,7 +91,7 @@ This is the cheapest place to catch a misunderstanding. Read `plan.md` in full f
 
 ### 6. Let it run
 
-The implementer and reviewer run automatically, up to 2 rounds, followed by the full gate. Approve permission prompts for commands like `.ai/scripts/gate.sh` and `php artisan test`, or allow them permanently.
+The implementer and reviewer run automatically, up to 2 rounds, followed by the full gate. Approve permission prompts for commands like `.ai/scripts/gate.sh` and `vendor/bin/sail artisan test`, or allow them permanently.
 
 ### 7. Review the result
 
@@ -99,7 +101,7 @@ cat .ai/work/<ticket-slug>/review-*.md     # what the reviewer found
 cat .ai/work/<ticket-slug>/pr.md           # commit message + PR text
 ```
 
-Also check the feature in the browser (`composer run dev`).
+Also check the feature in the browser (`vendor/bin/sail up -d`, then `vendor/bin/sail npm run dev`).
 
 ### 8. Commit and open the PR yourself
 
@@ -117,7 +119,9 @@ The AI never invents a ticket number.
 
 ## The gate
 
-`.ai/scripts/gate.sh` runs the project's checks and prints one line per check. Full logs go to `.ai/work/.gate/<check>.log`.
+`.ai/scripts/gate.sh` runs the project's checks and prints one line per check. Full logs go to `.ai/work/.gate/<check>.log`; long failure output is cut to 15 lines of up to 800 characters.
+
+Pint, Larastan, JS lint and TypeScript run on the host. Pest runs inside Sail because it needs the MySQL database, so **Sail must be running** (`vendor/bin/sail up -d`). If it isn't, the gate fails with a message saying so.
 
 ```bash
 .ai/scripts/gate.sh quick   # Pint (changed files), Larastan, Pest
@@ -144,6 +148,21 @@ It exits with `0` on pass and `1` on failure. You can run it yourself at any tim
 | Session was compacted or Claude was closed | Say: "continue the start-ticket flow for `.ai/work/<ticket-slug>/`".                         |
 | The gate fails before you start            | Fix the existing failures first, or the pipeline cannot tell new failures from old ones.     |
 | The request is too big                     | Split it. One ticket should be one reviewable PR.                                            |
+
+## Commit messages outside the pipeline
+
+For commits that don't come from `/start-ticket` — fixes after PR review, small changes without a ticket, manual work — use `/commit-msg`:
+
+```bash
+git add <files>          # stage what you want to commit
+```
+
+```
+/commit-msg
+/commit-msg fix review feedback      ← optional hint
+```
+
+It reads the staged diff, takes the ticket reference from the branch name (`feature/PROJ-123-...` → `PROJ-123`, `fix/GH-45-...` → `#45`), drafts a message in the same format as `pr.md`, and commits only after you confirm. It never stages, amends or pushes.
 
 ## Housekeeping
 

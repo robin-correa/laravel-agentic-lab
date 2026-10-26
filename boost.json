@@ -7,7 +7,7 @@
     "guidelines": true,
     "mcp": true,
     "nightwatch": false,
-    "sail": false,
+    "sail": true,
     "skills": [
         "infer-conventions",
         "deploying-to-cloud",
@@ -17,6 +17,7 @@
         "wayfinder-development",
         "inertia-react-development",
         "tailwindcss-development",
+        "commit-msg",
         "start-ticket"
     ]
 }
