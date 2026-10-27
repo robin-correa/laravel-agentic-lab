@@ -32,14 +32,12 @@ yarn-error.log
 !/.claude/agents/
 !/.claude/skills/
 !/.claude/settings.json
-/.codex
 /.cursor
 /.factory
 /.grok
 /.junie
 /.kiro
 /.pi
-/.mcp.json
 /opencode.json
 /opencode.jsonc
 /.ai/work
