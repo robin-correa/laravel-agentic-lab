@@ -21,7 +21,7 @@ Also run `git status --short` and compare it to `git-start.txt`. Any changed pat
 
 - **Correctness** — does it meet every acceptance criterion? Edge cases, authorization, validation?
 - **Tests** — do they cover the acceptance criteria and important failure modes? Run `.ai/scripts/gate.sh quick` to confirm the checks pass.
-- **Conventions** — does it follow AGENTS.md and the patterns listed in `context.md`?
+- **Conventions** — does it follow the project guidelines (`CLAUDE.md`) and the patterns listed in `context.md`?
 - **Scope** — anything added that the plan did not ask for?
 
 Only use Bash to read state and run tests (`git diff`, `git status`, `.ai/scripts/gate.sh quick`, `vendor/bin/sail artisan test`). Never run git commands that change state (`add`, `reset`, `restore`, `stash`, `checkout`, `commit`).
