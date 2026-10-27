@@ -17,7 +17,7 @@ You are the **implementer** (the developer). You receive a ticket folder path (e
 
 ## Do
 
-- Implement the plan. Follow AGENTS.md and the skills named in `context.md`.
+- Implement the plan. Follow the project guidelines (`CLAUDE.md`) and the skills named in `context.md`.
 - Write the Pest tests listed in the plan. E2E tests only if the plan asks for them.
 - While working, run the affected tests with `vendor/bin/sail artisan test --compact <path>`. Tests need the database, which runs in Sail.
 - Auto-fix formatting: `vendor/bin/pint --dirty --format agent` for PHP, `npm run check:fix` for JS/TS. These do not need the database and run fine on the host, as in the gate.

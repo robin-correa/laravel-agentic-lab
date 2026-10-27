@@ -97,7 +97,7 @@ Explore the codebase once, then write `context.md` so no other agent has to repe
 
 ## Applicable Rules
 
-- Skills and AGENTS.md rules the implementer must follow (e.g. laravel-best-practices, wayfinder-development)
+- Skills and project-guideline rules (`CLAUDE.md` / `AGENTS.md`) the implementer must follow (e.g. laravel-best-practices, wayfinder-development)
 ```
 
 ## Step 4: Plan — then STOP

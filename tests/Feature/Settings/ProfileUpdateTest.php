@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Inertia\Testing\AssertableInertia as Assert;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -10,6 +11,18 @@ test('profile page is displayed', function () {
         ->get(route('profile.edit'));
 
     $response->assertOk();
+});
+
+test('profile page shows the member since date', function () {
+    $user = User::factory()->create(['created_at' => '2026-10-27 10:00:00']);
+
+    $this
+        ->actingAs($user)
+        ->get(route('profile.edit'))
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('settings/profile')
+            ->where('memberSince', 'October 27, 2026')
+        );
 });
 
 test('profile information can be updated', function () {

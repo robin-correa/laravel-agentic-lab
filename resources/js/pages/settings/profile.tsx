@@ -18,9 +18,11 @@ type PageProps = {
 export default function Profile({
     mustVerifyEmail,
     status,
+    memberSince,
 }: {
     mustVerifyEmail: boolean;
     status?: string;
+    memberSince: string | null;
 }) {
     const { auth } = usePage<PageProps>().props;
 
@@ -31,11 +33,19 @@ export default function Profile({
             <h1 className="sr-only">Profile settings</h1>
 
             <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Profile"
-                    description="Update your name and email address"
-                />
+                <div className="space-y-2">
+                    <Heading
+                        variant="small"
+                        title="Profile"
+                        description="Update your name and email address"
+                    />
+
+                    {memberSince !== null && (
+                        <p className="text-sm text-muted-foreground">
+                            Member since {memberSince}
+                        </p>
+                    )}
+                </div>
 
                 <Form
                     {...ProfileController.update.form()}
